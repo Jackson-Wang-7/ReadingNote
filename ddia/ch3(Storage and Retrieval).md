@@ -52,9 +52,11 @@ LSM 树的基本思想 —— 保存一系列在后台合并的 SSTables —— 
 ## B树
 使用最广泛的索引结构，在几乎所有的关系数据库中，它们仍然是标准的索引实现，许多非关系数据库也会使用到 B 树。
 查询场景：
+
 <img width="575" alt="image" src="https://user-images.githubusercontent.com/39869597/163806455-6495ea44-32e7-43f1-a7c7-5af193766fe3.png">
 
 添加场景：通过分割页面来生长 B 树
+
 <img width="570" alt="image" src="https://user-images.githubusercontent.com/39869597/163806475-dab5c5c4-4f1f-421a-8ac0-30848eff500d.png">
 
 
