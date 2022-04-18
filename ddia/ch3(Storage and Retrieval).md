@@ -24,6 +24,7 @@ append-only的意义：
 2、在文件中找到一个特定的键，不需要在内存中维护所有键的索引，只需要稀疏索引。
 3、读取请求现在无论如何都要扫描请求范围内的多个键值对，可以将这个范围内的数据合并为块，压缩写入硬盘。除了节省硬盘空间之外，压缩还可以减少对 I/O 带宽的使用。
 
+<img width="543" alt="image" src="https://user-images.githubusercontent.com/39869597/163806363-2b2c8c60-a5e8-4108-b9e5-484a5f0b2466.png">
 
 
 
@@ -32,6 +33,8 @@ append-only的意义：
 • 当 内存表 大于某个阈值（通常为几兆字节）时，将其作为 SSTable 文件写入硬盘。这可以高效地完成，因为树已经维护了按键排序的键值对。新的 SSTable 文件将成为数据库中最新的段。当该 SSTable 被写入硬盘时，新的写入可以在一个新的内存表实例上继续进行。
 • 收到读取请求时，首先尝试在内存表中找到对应的键，如果没有就在最近的硬盘段中寻找，如果还没有就在下一个较旧的段中继续寻找，以此类推。
 • 时不时地，在后台运行一个合并和压缩过程，以合并段文件并将已覆盖或已删除的值丢弃掉。
+> 布隆过滤器（Bloom filter）是用于近似集合内容的高效内存数据结构，它可以告诉你数据库中是不是不存在某个键，从而为不存在的键节省掉许多不必要的硬盘读取操作。
+
 
 ### 用SSTables制作LSM树的应用
 LevelDB和RocksDB的存储引擎方案。LevelDB 可以在 Riak 中用作 Bitcask 的替代品。在 Cassandra 和 HBase 中也使用了类似的存储引擎，而且他们都受到了 Google 的 Bigtable 论文（引入了术语 SSTable 和 memtable ）的启发。
@@ -49,8 +52,10 @@ LSM 树的基本思想 —— 保存一系列在后台合并的 SSTables —— 
 ## B树
 使用最广泛的索引结构，在几乎所有的关系数据库中，它们仍然是标准的索引实现，许多非关系数据库也会使用到 B 树。
 查询场景：
+<img width="575" alt="image" src="https://user-images.githubusercontent.com/39869597/163806455-6495ea44-32e7-43f1-a7c7-5af193766fe3.png">
 
 添加场景：通过分割页面来生长 B 树
+<img width="570" alt="image" src="https://user-images.githubusercontent.com/39869597/163806475-dab5c5c4-4f1f-421a-8ac0-30848eff500d.png">
 
 
 ### WAL让B树更可靠
